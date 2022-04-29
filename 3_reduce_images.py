@@ -34,7 +34,7 @@ allimages  = db.select(['object'],
 
 def reduce(image):
     mainbiases =  db.select(['binning'], 
-                            [3], 
+                            [image['binning'], 
                             tablename='mainbias',
                             returnType='dict')
     mainbiasdates = np.array([Time(e['date']).to_value('mjd') 
@@ -84,23 +84,22 @@ def reduce(image):
 pool = multiprocessing.Pool(processes=maxcores)
 pool.map(reduce, allimages)
 
-        
-# for filter in filters:
-    # relevantimages = [e for e in allimages if e['filter'] == filter]
-    # for image in relevantimages:
-        # reduce(image)
-# filters = list(set([e['filter'] for e in allimages]))
-# import matplotlib.pyplot as plt
-# from astropy.visualization import simple_norm
-# def see(im, v=2, V=98):
-#     im2 = np.array(im)
-#     norm = simple_norm(im2, 'asinh')
-#     v, V = np.nanpercentile(im2, (2, 98))
-#     plt.figure()
-#     plt.imshow(im2, origin='lower', norm=norm, vmin=v, vmax=V)
-#     plt.waitforbuttonpress()
 
 
-    # from astropy.io import fits
-    # x = fits.open(writepath)[0]
-    # see(x.data, v=5, V=95)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
