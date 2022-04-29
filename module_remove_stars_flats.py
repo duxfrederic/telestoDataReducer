@@ -78,17 +78,7 @@ def fitMoffatProfileAndReplace(fullimage, x0, y0, N=10, debug=0):
     addBackStampAndMedian(fullimage, residuals, median, x0, y0, N=N)
     
     
-def removeStarsFromArray(fitspath, outpath):
-    """ 
-        - on lit le fichier fits
-        - on debayerise 
-        - on cherche les étoiles
-        - pour chaque couleur, on soustrait des profiles Moffat à chaque étoile 
-        - on re-bayerise
-    """
-    header = fits.getheader(fitspath)
-    array  = fits.getdata(fitspath)
-
+def removeStarsFromArray(array):
     mean, median, std  = sigma_clipped_stats(array)
     daofind            = DAOStarFinder(threshold=std, fwhm=1.3)
     sources            = daofind(array-median)
@@ -97,10 +87,7 @@ def removeStarsFromArray(fitspath, outpath):
     positions = np.transpose((sources['xcentroid'], sources['ycentroid']))
     for x0, y0 in positions:
         fitMoffatProfileAndReplace(array, x0, y0, N=10, debug=0)
-    
-    fits.writeto(outpath,
-                 data=array, 
-                 header=header, overwrite=1)
+    return array 
 
 
 if __name__ == "__main__":
