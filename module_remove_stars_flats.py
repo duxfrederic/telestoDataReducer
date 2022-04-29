@@ -80,8 +80,11 @@ def fitMoffatProfileAndReplace(fullimage, x0, y0, N=10, debug=0):
     
 def removeStarsFromArray(array):
     mean, median, std  = sigma_clipped_stats(array)
-    daofind            = DAOStarFinder(threshold=std, fwhm=1.3)
-    sources            = daofind(array-median)
+    daofind            = DAOStarFinder(threshold=2*std, fwhm=3.5)
+    try:
+        sources            = daofind(array-median)
+    except:
+        return array
     print(f"found {len(sources)} stars.")
     
     positions = np.transpose((sources['xcentroid'], sources['ycentroid']))

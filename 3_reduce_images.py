@@ -34,7 +34,7 @@ allimages  = db.select(['object'],
 
 def reduce(image):
     mainbiases =  db.select(['binning'], 
-                            [image['binning'], 
+                            [image['binning']], 
                             tablename='mainbias',
                             returnType='dict')
     mainbiasdates = np.array([Time(e['date']).to_value('mjd') 

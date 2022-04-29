@@ -221,4 +221,4 @@ for binning in allbinnings:
                            'filter':filter},
                            tablename='mainflats')
 
-
+print("Done with preparing main calibrations")
