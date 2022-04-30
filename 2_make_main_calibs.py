@@ -15,7 +15,8 @@ from astropy.units import s
 
 
 from database import ImageBase
-from config import  dbname, calibdir, flat, bias, dark, workdir
+from config import  dbname, calibdir, flat, bias, dark, workdir,\
+                    lowstd, highstd
 from module_remove_stars_flats import removeStarsFromArray
 
 calibdir = Path(calibdir)
@@ -53,7 +54,7 @@ for binning in allbinnings:
             break
         mainbiascmb = ImageFileCollection(filenames=relevantfiles)
         cmb = Combiner(mainbiascmb.ccds(ccd_kwargs={'unit':'adu'}))
-        cmb.sigma_clipping(low_thresh=2, high_thresh=4, func=np.ma.median)
+        cmb.sigma_clipping(low_thresh=lowstd, high_thresh=highstd, func=np.ma.median)
         av = cmb.average_combine()
         date = Time(date, format='mjd').to_value('isot')
         path = calibdir / f"mainbias_mjd{date}_binning{binning}.fits"
@@ -123,7 +124,7 @@ for binning in allbinnings:
             relevantfiles = [relevantentries[i]['reducedpath'] for i in relevant]
             maindarkcmb = ImageFileCollection(filenames=relevantfiles)
             cmb = Combiner(maindarkcmb.ccds(ccd_kwargs={'unit':'adu'}))
-            cmb.sigma_clipping(low_thresh=2, high_thresh=4, func=np.ma.median)
+            cmb.sigma_clipping(low_thresh=lowstd, high_thresh=highstd, func=np.ma.median)
             av = cmb.average_combine()
             date = Time(date, format='mjd').to_value('isot')
             path = calibdir / f"maindark_date{date}_binning{binning}_exptime{exptime}.fits"
@@ -209,7 +210,7 @@ for binning in allbinnings:
             relevantfiles = [relevantentries[i]['reducedpath'] for i in relevant]
             mainflatcmb = ImageFileCollection(filenames=relevantfiles)
             cmb = Combiner(mainflatcmb.ccds(ccd_kwargs={'unit':'adu'}))
-            cmb.sigma_clipping(low_thresh=2, high_thresh=4, func=np.ma.median)
+            cmb.sigma_clipping(low_thresh=lowstd, high_thresh=highstd, func=np.ma.median)
             av = cmb.average_combine()
             date = Time(date, format='mjd').to_value('isot')
             safefilter = filter.replace(' ', '').replace('/', '')

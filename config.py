@@ -16,6 +16,9 @@ outdir = join(datadir, 'outdir')
 makedirs(calibdir, exist_ok=1)
 makedirs(outdir, exist_ok=1)
 
+# interpreter to use when launching multiple scripts:
+python = "/home/fred/anaconda3/bin/python"
+
 # were do we want our database?
 dbname = join(workdir, 'db.db')
 
@@ -26,6 +29,8 @@ crop = 100
 
 # for alignment, how many cores?
 maxcores = 4
+# redo align?
+redoalign = False
 ###############################################################################
 # ok, now we specify the oject (or list of objects) we want to reduce, 
 # as well as a date:
@@ -39,3 +44,8 @@ light = 'Light Frame'
 dark = 'Dark Frame'
 bias = 'Bias Frame'
 
+
+######### stacking
+# in units of standard deviations
+highstd = 1.7
+lowstd  = 1.6

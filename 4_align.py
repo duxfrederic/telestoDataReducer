@@ -14,7 +14,7 @@ from astropy.io import fits
 
 
 from database import ImageBase
-from config import  dbname, workdir, target, maxcores, crop
+from config import  dbname, workdir, target, maxcores, crop, redoalign
 
 workdir = Path(workdir)
 
@@ -33,12 +33,18 @@ def alignOneImage(image):
     path = image['reducedpath']
     array = fits.getdata(path)[crop:-crop, crop:-crop]
     
-    aligned = aa.register(array.astype(np.float64), 
-                          refimgarray.astype(np.float64))
-    
-    
     outname = Path(path).name
     outname = workdir / outname.replace('.fits', '_aligned.fits')
+    if outname.exists() and not redoalign:
+        return
+
+    try:
+        aligned = aa.register(array.astype(np.float64), 
+                              refimgarray.astype(np.float64))
+    except:
+        return
+    
+
     fits.writeto(outname, aligned[0].astype(np.float32), overwrite=1)
     db.update(['recno'], [image['recno']], {'alignedpath':outname})
 

@@ -30,6 +30,7 @@ allimages  = db.select(['object'],
                        returnType='dict')
 
 
+print(f"Reducing {len(allimages)} images")
 
 
 def reduce(image):
